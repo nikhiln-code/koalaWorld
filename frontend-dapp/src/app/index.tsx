@@ -1,15 +1,13 @@
-// app/page.tsx
-"use client"; // Mark this as a client-side component
-
+// index.tsx
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 
-export default function HomePage() {
-  const { isConnected, address } = useAccount();
+export default function Home() {
+  const { address, isConnected } = useAccount();
 
   return (
     <main className="min-h-screen bg-black text-white p-10">
-      <h1 className="text-2xl mb-4">Game Portal</h1>
+      <h1 className="text-2xl mb-4">RainbowKit + Wagmi Test</h1>
       <ConnectButton />
       {isConnected && <p className="mt-4">Connected: {address}</p>}
     </main>
