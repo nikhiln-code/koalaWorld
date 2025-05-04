@@ -2,29 +2,16 @@ package handler
 
 import (
 	"bytes"
-	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"github.com/gin-gonic/gin"
-	"github.com/nikhiln-code/koalaWorld/go-backend/internal/handler"
+	"github.com/nikhiln-code/koalaWorld/go-backend/tests/utils"
 	"github.com/stretchr/testify/assert"
 )
 
-func setupTestRouter() *gin.Engine{
-	r := gin.Default()
-	api := r.Group("/api")
-	{
-		api.GET("/inventory", handler.GetInventory)
-		api.POST("/mint", handler.MintItem)
-		api.POST("/transfer", handler.TransferItem)
-	}
-	return r
-}
-
 func TestGetInventory( t *testing.T){
-	router := setupTestRouter()
+	router := utils.SetupTestRouter()
 
 	req, _ := http.NewRequest("GET", "/api/inventory", nil)
 	resp := httptest.NewRecorder()
@@ -35,12 +22,10 @@ func TestGetInventory( t *testing.T){
 }
 
 func TestMintItem(t *testing.T){
-	router:= setupTestRouter()
+	router := utils.SetupTestRouter()
 
-	body := map[string]string {"name": "Excalibur", "address":"0x123"}
-	jsonValue, _ := json.Marshal(body)
-
-	req, _ := http.NewRequest("POST", "/api/mint", bytes.NewBuffer(jsonValue))
+	reqBody := bytes.NewBuffer(utils.GetMintPayload())
+	req, _ := http.NewRequest("POST", "/api/mint", reqBody)
 	req.Header.Set("Content-Type", "application/json")
 
 	resp := httptest.NewRecorder()
@@ -52,12 +37,10 @@ func TestMintItem(t *testing.T){
 
 
 func TestTransferItem(t *testing.T){
-	router:= setupTestRouter()
+	router := utils.SetupTestRouter()
 
-	body := map[string]string {"name": "Guardian Shield", "address":"0x789"}
-	jsonValue, _ := json.Marshal(body)
-
-	req, _ := http.NewRequest("POST", "/api/transfer", bytes.NewBuffer(jsonValue))
+	reqBody := bytes.NewBuffer(utils.GetTransferPayload())
+	req, _ := http.NewRequest("POST", "/api/transfer", reqBody)
 	req.Header.Set("Content-Type", "application/json")
 
 	resp := httptest.NewRecorder()
