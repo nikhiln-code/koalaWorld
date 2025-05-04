@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { fetchInventory } from "../api/inventory/route";
 
 type Item = {
   id: string;
@@ -15,12 +16,10 @@ export default function InventoryPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/inventory")
-      .then((res) => res.json())
-      .then((data) => {
-        setItems(data);
-        setLoading(false);
-      });
+    fetchInventory().then((data) => {
+      setItems(data);
+      setLoading(false);
+    });
   }, []);
 
   return (
