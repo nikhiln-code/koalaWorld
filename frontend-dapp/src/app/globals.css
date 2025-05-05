@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --background: #ffffff;
@@ -16,6 +18,53 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+  }
+}
+
+@font-face {
+  font-family: "BruceForever";
+  src: url("/assets/fonts/BruceForever.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.font-bruce {
+  font-family: "BruceForever", sans-serif;
+}
+
+@layer utilities {
+  .shine-effect {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shine-effect::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 1%;
+    height: 100%;
+
+    background: linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0.3) 0%,
+      rgba(255, 255, 255, 0.1) 100%
+    );
+    transform: skewX(-25deg);
+    animation: shine 2s infinite;
+  }
+  @keyframes shine {
+    0% {
+      left: -75%;
+    }
+    100% {
+      left: 125%;
+    }
+  }
+
+  .shine-effect::before {
+    animation: shine 2s infinite;
   }
 }
 

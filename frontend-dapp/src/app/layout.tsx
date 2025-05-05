@@ -8,6 +8,7 @@ import { RainbowKitProvider, getDefaultConfig } from "@rainbow-me/rainbowkit"; /
 import { polygonMumbai } from "wagmi/chains"; // Your chain (e.g., Polygon Mumbai)
 import { http } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"; // React Query
+import Footer from "./components/Footer";
 
 const queryClient = new QueryClient();
 
