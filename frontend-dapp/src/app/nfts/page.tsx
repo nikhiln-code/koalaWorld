@@ -23,7 +23,7 @@ export default function InventoryPage() {
   }, []);
 
   return (
-    <main className="p-8 bg-[#0d0d0d] min-h-screen text-white">
+    <main className="p-6 max-w-4xl min-h-screen text-white">
       <h1 className="text-3xl font-bold mb-6">🧰 Game Inventory</h1>
 
       {loading ? (

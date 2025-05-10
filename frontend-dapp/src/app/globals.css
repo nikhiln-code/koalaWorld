@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
   --background: #ffffff;
@@ -33,6 +31,7 @@
 }
 
 @layer utilities {
+  /* Define the shine effect utility */
   .shine-effect {
     position: relative;
     overflow: hidden;
@@ -45,7 +44,6 @@
     left: -75%;
     width: 1%;
     height: 100%;
-
     background: linear-gradient(
       120deg,
       rgba(255, 255, 255, 0.3) 0%,
@@ -54,6 +52,8 @@
     transform: skewX(-25deg);
     animation: shine 2s infinite;
   }
+
+  /* Define the keyframes for the shine animation */
   @keyframes shine {
     0% {
       left: -75%;
@@ -62,14 +62,26 @@
       left: 125%;
     }
   }
-
-  .shine-effect::before {
-    animation: shine 2s infinite;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  animation: gradient 4s ease infinite;
 }
