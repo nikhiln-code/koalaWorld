@@ -38,9 +38,13 @@ func NewMintHandler(jwt string, svc *service.NFTService) *MintHandler{
 func (h *MintHandler) MintNFT(c *gin.Context){
 	name := c.PostForm("name")
 	description := c.PostForm("description")
+	rarity := c.PostForm("rarity")
+	fileName := c.PostForm("filename")
+	enviornment := c.PostForm("enviornment")
 
-	if name == "" || description == ""{
-		c.JSON(http.StatusBadRequest, gin.H{"error":"Name and description are required"})
+
+	if name == "" || description == "" || rarity == "" || fileName == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error":"Name, description, filename, rarity are required"})
 		return
 	}
 	file, _, err := c.Request.FormFile("image")
@@ -56,15 +60,21 @@ func (h *MintHandler) MintNFT(c *gin.Context){
 		return
 	}
 
-	metadataURL, err := h.Service.UploadToPinata(h.PinataJWT, name, description, imageData)
+	fileMetadata := service.NFTMetadata{
+		Name: name,
+		Description: description,
+		Image: fileName,
+		Environment: enviornment,
+		Rarity: rarity,
+	}
+
+	metadataURL, err := h.Service.UploadToPinata(h.PinataJWT, fileMetadata, imageData)
 	if err != nil{
 		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error uploading to Pinata: %v", err)})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-
-
 		"ipfs_metadata_url": metadataURL,
 		"message": "NFT minted successfully",
 	})

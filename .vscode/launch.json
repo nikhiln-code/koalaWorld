@@ -11,7 +11,7 @@
       "mode": "auto",
       "program": "${workspaceFolder}/go-backend/cmd/server",
       "env": {},
-      "args": [],
+      "args": ["--config", "../../config/config.dev.yaml"],
       "buildFlags": "",
       "showLog": true,
       "trace": "verbose"

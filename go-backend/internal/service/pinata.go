@@ -17,62 +17,66 @@ func NewNFTService() *NFTService{
 	return &NFTService{}
 }
 
-func (s *NFTService) UploadToPinata(jwt, name, description string, imageData []byte) (string, error){
+func (s *NFTService) UploadToPinata(jwt string, metadata NFTMetadata, imageData []byte) (string, error) {
 	client := resty.New()
 
 	//1. Upload the image 
 	var buf bytes.Buffer
 	writer := multipart.NewWriter(&buf)
 
-	part, _ := writer.CreateFormFile("file", "nft.png")
+	// Create form file for the image
+	part, _ := writer.CreateFormFile("file", metadata.Image)
 	part.Write(imageData)
-	writer.Close()	
+	writer.WriteField("network", "public")
+	
 
-	imageResp , err := client.R().
-	SetHeader("Authorization", jwt).
-	SetHeader("Content-Type", writer.FormDataContentType()).
-	SetBody(&buf).
-	Post("https://api.pinata.cloud/pinning/pinFileToIPFS")
-
-
-	if err != nil || imageResp.StatusCode() != http.StatusOK{
-		return "", fmt.Errorf("Error uploading image to Pinata: %w", err)
+	keyvalues := map[string]string{
+		"name":        metadata.Name,
+		"description": metadata.Description,
+		"env":         metadata.Environment,
+		"rarity":      metadata.Rarity,
+		"image":       metadata.Image,
 	}
 
+	keyvalueJSON, err := json.Marshal(keyvalues)
+	outer := map[string]interface{}{
+		"keyvalues": string(keyvalueJSON), 
+	}
+	outerJSON, err := json.Marshal(outer)
 
+	// Write keyvalues field
+	writer.WriteField("keyvalues", string(outerJSON))
+	// Close the multipart writer
+	writer.Close()
+	
+	// Send the request to Pinata
+	imageResp, err := client.R().
+		SetHeader("Authorization", jwt).
+		SetHeader("Content-Type", writer.FormDataContentType()).
+		SetBody(&buf).
+		Post("https://uploads.pinata.cloud/v3/files")
+
+	// Check for errors or bad status codes
+	if err != nil || imageResp.StatusCode() != http.StatusOK {
+		return "", fmt.Errorf("error uploading image to Pinata: %w", err)
+	}
+
+	// Unmarshal the response
 	var imagerResult map[string]interface{}
 	json.Unmarshal(imageResp.Body(), &imagerResult)
-	imageCid := imagerResult["IpfsHash"].(string)
-	imageUrl :="ipfs://" +imageCid
+	// Safely extract the CID
+	data, _ := imagerResult["data"].(map[string]interface{})
+	imageCid, _ := data["cid"].(string)
 
-
-	//2. Upload metadata JSON
-	metadata := Metadata{
-		Name: name,
-		Description: description,
-		Image: imageUrl,
-	}
-	metaBytes, _ := json.Marshal(metadata)
-
-	metaResp, err := client.R().
-		SetHeader("Authorization", jwt).
-		SetHeader("Content-Type", "application/json").
-		SetBody(metaBytes).
-		Post("https://api.pinata.cloud/pinning/pinJSONToIPFS")
-
-	if err != nil || metaResp.StatusCode() != http.StatusOK {
-		return "", fmt.Errorf("metadata upload failed: %v", err)
-	}
-
-	var metaResult map[string]interface{}
-	json.Unmarshal(metaResp.Body(), &metaResult)
-	metaCid := metaResult["IpfsHash"].(string)
-
-	return "ipfs://" + metaCid, nil
+	// Construct the image URL
+	imageUrl := "ipfs://" + imageCid
+	return imageUrl, nil
 }
 
-type Metadata struct {
+type NFTMetadata struct {
 	Name string `json:"name"`
 	Description string `json:"description"`
 	Image string `json:"image"` 
+	Environment string `json:"environment"`
+	Rarity string `json:"rarity"`
 }

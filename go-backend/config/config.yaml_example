@@ -6,7 +6,7 @@ blockchain:
   private_key: "mock_private_key_here"
 
 pinata:
-  jwt_key
+  jwt_key : "Bearer JWT_KEY_HERE"
 
 cors:
   allowed_origins: "http://localhost:3000"
