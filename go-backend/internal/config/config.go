@@ -12,9 +12,17 @@ type AppConfig struct{
 		Port string
 	}
 
+	Cors struct{
+		AllowedOrigins []string `mapstructure:"allowed_origins"`
+	}
+
 	Blockchain struct{
 		NodeURL string `mapstructure:"node_url"`
 		PrivateKey string `mapstructure:"private_key"`
+	}
+
+	Pinata struct{
+		JwtKEY string `mapstructure:"jwt_key"`
 	}
 }
 
@@ -33,8 +41,8 @@ func LoadConfig()(*AppConfig, error){
 	if err:= viper.ReadInConfig(); err !=nil{
 		return nil, fmt.Errorf("Error reading config file: %w", err)
 	}
-	var conf AppConfig
 
+	var conf AppConfig
 	if err := viper.Unmarshal(&conf); err != nil{
 		return nil,fmt.Errorf("Unable to decode config into struct: %w", err)
 	}

@@ -4,3 +4,9 @@ app:
 blockchain:
   node_url: "https://mock-chain.io"
   private_key: "mock_private_key_here"
+
+pinata:
+  jwt_key
+
+cors:
+  allowed_origins: "http://localhost:3000"
