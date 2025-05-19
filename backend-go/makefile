@@ -1,7 +1,7 @@
 # Project Metadata
 APP_NAME := koala-world-backend
 PKG := ./...
-MAIN := cmd/main.go
+MAIN := cmd/server/main.go
 BIN_DIR := bin
 COVERAGE_FILE := coverage.out
 
