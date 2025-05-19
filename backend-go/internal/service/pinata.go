@@ -17,6 +17,20 @@ func NewNFTService() *NFTService{
 	return &NFTService{}
 }
 
+type NFTMetadata struct {
+	Name string `json:"name"`
+	Description string `json:"description"`
+	Image string `json:"image"` 
+	Environment string `json:"environment"`
+	Rarity string `json:"rarity"`
+}
+
+type NFTServiceInterface interface{
+	GetNFTs(jwt string) (string, error)
+	GetNFT(jwt, cid string) (string, error)
+	UploadToPinata(jwt string, metadata NFTMetadata, imageData []byte) (string, error)
+}
+
 func (s *NFTService) UploadToPinata(jwt string, metadata NFTMetadata, imageData []byte) (string, error) {
 	client := resty.New()
 
@@ -73,10 +87,38 @@ func (s *NFTService) UploadToPinata(jwt string, metadata NFTMetadata, imageData 
 	return imageUrl, nil
 }
 
-type NFTMetadata struct {
-	Name string `json:"name"`
-	Description string `json:"description"`
-	Image string `json:"image"` 
-	Environment string `json:"environment"`
-	Rarity string `json:"rarity"`
+func (s *NFTService) GetNFT(jwt ,cid string) (string, error) {
+	client := resty.New()
+
+	resp, err := client.R().
+	SetHeader("Authorization", jwt).
+	SetHeader("Content-Type", "application/json").
+	Get("https://api.pinata.cloud/v3/files/public?cid=" + cid)
+
+	// Check for errors or bad status codes
+	if err != nil || resp.StatusCode() != http.StatusOK {
+		return "", fmt.Errorf("error fetching NFT from Pinata: %w", err)
+	}
+
+	// Unmarshal the response
+	json.Unmarshal(resp.Body(), &resp)
+	return string(resp.Body()), nil
+}
+
+func (s *NFTService) GetNFTs(jwt string) (string, error) {
+	client := resty.New()
+
+	resp, err := client.R().
+	SetHeader("Authorization", jwt).
+	SetHeader("Content-Type", "application/json").
+	Get("https://api.pinata.cloud/v3/files/public")
+
+	// Check for errors or bad status codes
+	if err != nil || resp.StatusCode() != http.StatusOK {
+		return "", fmt.Errorf("error fetching NFTs from Pinata: %w", err)
+	}
+
+	// Unmarshal the response
+	json.Unmarshal(resp.Body(), &resp)
+	return string(resp.Body()), nil
 }

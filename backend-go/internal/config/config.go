@@ -7,6 +7,9 @@ import (
 	"github.com/spf13/viper"
 )
 
+/*
+** Load the configuration file
+ */
 type AppConfig struct{
 	App struct{
 		Port string
@@ -30,7 +33,7 @@ type AppConfig struct{
 func LoadConfig()(*AppConfig, error){
 	env := os.Getenv("APP_ENV")
 	if(env ==""){
-		env ="dev"  //default to dev if not set in enviornment
+		env ="dev"  
 	}
 
 	viper.SetConfigName(fmt.Sprintf("config.%s", env))
@@ -48,5 +51,4 @@ func LoadConfig()(*AppConfig, error){
 	}
 
 	return &conf, nil
-
 }

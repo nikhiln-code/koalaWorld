@@ -1,0 +1,621 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>server: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/nikhiln-code/koalaWorld/backend-go/cmd/server/main.go (0.0%)</option>
+				
+				<option value="file1">github.com/nikhiln-code/koalaWorld/backend-go/internal/config/config.go (0.0%)</option>
+				
+				<option value="file2">github.com/nikhiln-code/koalaWorld/backend-go/internal/handler/fetch_handler.go (100.0%)</option>
+				
+				<option value="file3">github.com/nikhiln-code/koalaWorld/backend-go/internal/handler/handler.go (0.0%)</option>
+				
+				<option value="file4">github.com/nikhiln-code/koalaWorld/backend-go/internal/handler/mint_handler.go (91.3%)</option>
+				
+				<option value="file5">github.com/nikhiln-code/koalaWorld/backend-go/internal/handler/transfer_handler.go (0.0%)</option>
+				
+				<option value="file6">github.com/nikhiln-code/koalaWorld/backend-go/internal/router/router.go (0.0%)</option>
+				
+				<option value="file7">github.com/nikhiln-code/koalaWorld/backend-go/internal/service/pinata.go (0.0%)</option>
+				
+				<option value="file8">github.com/nikhiln-code/koalaWorld/backend-go/tests/utils/mockNFT.go (100.0%)</option>
+				
+				<option value="file9">github.com/nikhiln-code/koalaWorld/backend-go/tests/utils/payload.go (0.0%)</option>
+				
+				<option value="file10">github.com/nikhiln-code/koalaWorld/backend-go/tests/utils/router.go (0.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package main
+
+import (
+        "log"
+
+        "github.com/nikhiln-code/koalaWorld/backend-go/internal/config"
+        "github.com/nikhiln-code/koalaWorld/backend-go/internal/router"
+)
+
+/**
+** Main entry point for this application.
+** It loads the configuration and starts the server.
+**/
+func main()<span class="cov0" title="0">{
+        
+        conf, err := config.LoadConfig()
+        if err != nil</span><span class="cov0" title="0">{
+                log.Fatal("Failed to load the config:", err)
+        }</span>
+
+        <span class="cov0" title="0">r:=router.SetupRouter()
+        
+    port := conf.App.Port
+
+        log.Printf("Server running at http://localhost:%s\n", port)
+
+        if err :=r.Run(":"+port); err != nil</span><span class="cov0" title="0">{
+                log.Fatal("Failed to start Server:", err)
+        }</span>
+}</pre>
+		
+		<pre class="file" id="file1" style="display: none">package config
+
+import (
+        "fmt"
+        "os"
+
+        "github.com/spf13/viper"
+)
+
+/*
+** Load the configuration file
+ */
+type AppConfig struct{
+        App struct{
+                Port string
+        }
+
+        Cors struct{
+                AllowedOrigins []string `mapstructure:"allowed_origins"`
+        }
+
+        Blockchain struct{
+                NodeURL string `mapstructure:"node_url"`
+                PrivateKey string `mapstructure:"private_key"`
+        }
+
+        Pinata struct{
+                JwtKEY string `mapstructure:"jwt_key"`
+        }
+}
+
+
+func LoadConfig()(*AppConfig, error)<span class="cov0" title="0">{
+        env := os.Getenv("APP_ENV")
+        if(env =="")</span><span class="cov0" title="0">{
+                env ="dev"  
+        }</span>
+
+        <span class="cov0" title="0">viper.SetConfigName(fmt.Sprintf("config.%s", env))
+        viper.SetConfigType("yaml")
+        viper.AddConfigPath("./config")
+        viper.AutomaticEnv()
+
+        if err:= viper.ReadInConfig(); err !=nil</span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("Error reading config file: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">var conf AppConfig
+        if err := viper.Unmarshal(&amp;conf); err != nil</span><span class="cov0" title="0">{
+                return nil,fmt.Errorf("Unable to decode config into struct: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">return &amp;conf, nil</span>
+}</pre>
+		
+		<pre class="file" id="file2" style="display: none">package handler
+
+import (
+        "net/http"
+
+        "github.com/gin-gonic/gin"
+)
+
+func (h *NFTHandler) GetNFT(c *gin.Context) <span class="cov8" title="1">{
+        cid := c.Query("cid")
+
+        var (
+                result string
+                err    error
+        )
+
+        if cid == "" </span><span class="cov8" title="1">{
+                result, err = h.Service.GetNFTs(h.PinataJWT)
+                if err != nil </span><span class="cov8" title="1">{
+                        c.JSON(http.StatusInternalServerError, gin.H{"error": "Error fetching NFTs"})
+                        return
+                }</span>
+        } else<span class="cov8" title="1"> {
+                result, err = h.Service.GetNFT(h.PinataJWT, cid)
+                if err != nil </span><span class="cov8" title="1">{
+                        c.JSON(http.StatusInternalServerError, gin.H{"error": "Error fetching NFT"})
+                        return
+                }</span>
+        }
+
+        <span class="cov8" title="1">c.JSON(http.StatusOK, gin.H{
+                "data":    result,
+                "message": "NFT(s) fetched successfully",
+        })</span>
+}</pre>
+		
+		<pre class="file" id="file3" style="display: none">package handler
+
+import (
+        "net/http"
+
+        "github.com/gin-gonic/gin"
+        "github.com/nikhiln-code/koalaWorld/backend-go/internal/model"
+        "github.com/nikhiln-code/koalaWorld/backend-go/internal/service"
+) 
+
+type NFTHandler struct{
+        PinataJWT string
+        Service service.NFTServiceInterface
+}
+
+func NewNFTHandler(jwt string, svc service.NFTServiceInterface) *NFTHandler<span class="cov0" title="0">{
+        return &amp;NFTHandler{
+                PinataJWT: jwt,
+                Service: svc,
+        }
+}</span>
+
+
+var mockInventory = []model.NFT{
+    {ID: "1", Name: "Shadow Blade", Rarity: "Legendary", Image: "/assets/sword.png", Owner: "0x123.."},
+    {ID: "2", Name: "Guardian Shield", Rarity: "Epic", Image: "/assets/shield.png", Owner: "0xC56.."},
+    {ID: "3", Name: "Healing Potion", Rarity: "Common", Image: "/assets/potion.png", Owner: "0x769.."},
+}
+
+
+func GetInventory (c *gin.Context)<span class="cov0" title="0">{
+        c.JSON(http.StatusOK, mockInventory)
+}</pre>
+		
+		<pre class="file" id="file4" style="display: none">package handler
+
+import (
+        "fmt"
+        "io"
+        "net/http"
+
+        "github.com/gin-gonic/gin"
+        "github.com/nikhiln-code/koalaWorld/backend-go/internal/service"
+)
+
+
+
+/*
+** MintNFT handles the minting of NFTs
+** It takes the name, description, rarity, filename, enviornment from the request
+** It also takes the image file from the request
+** It returns the NFT metadata and the IPFS hash of the image
+** It returns an error if any of the required fields are missing
+*/
+func (h *NFTHandler) MintNFT(c *gin.Context)<span class="cov8" title="1">{
+        //Get the form values
+        name := c.PostForm("name")
+        description := c.PostForm("description")
+        rarity := c.PostForm("rarity")
+        fileName := c.PostForm("filename")
+        enviornment := c.PostForm("enviornment")
+
+        //Check if any of the required fields are missing
+        if name == "" || description == "" || rarity == "" || fileName == "" </span><span class="cov8" title="1">{
+                c.JSON(http.StatusBadRequest, gin.H{"error":"Name, description, filename, rarity are required"})
+                return
+        }</span>
+
+        //Get the image file from the request
+        <span class="cov8" title="1">file, _, err := c.Request.FormFile("image")
+        if err != nil</span><span class="cov8" title="1">{
+                c.JSON(http.StatusBadRequest, gin.H{"error":"Image is required"})
+                return
+        }</span>
+        <span class="cov8" title="1">defer file.Close()
+
+        //Read the image file
+        imageData, err := io.ReadAll(file)
+        if err != nil</span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"error":"Error reading image"})
+                return
+        }</span>
+
+        //Create the NFT metadata
+        <span class="cov8" title="1">fileMetadata := service.NFTMetadata{
+                Name: name,
+                Description: description,
+                Image: fileName,
+                Environment: enviornment,
+                Rarity: rarity,
+        }
+
+        //Upload the image to Pinata
+        metadataURL, err := h.Service.UploadToPinata(h.PinataJWT, fileMetadata, imageData)
+        if err != nil</span><span class="cov8" title="1">{
+                c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error uploading to Pinata: %v", err)})
+                return
+        }</span>
+
+        <span class="cov8" title="1">c.JSON(http.StatusOK, gin.H{
+                "ipfs_metadata_url": metadataURL,
+                "message": "NFT minted successfully",
+        })</span>
+
+}</pre>
+		
+		<pre class="file" id="file5" style="display: none">package handler
+
+import (
+        "net/http"
+        "time"
+
+        "github.com/gin-gonic/gin"
+        "github.com/nikhiln-code/koalaWorld/backend-go/internal/model"
+)
+        
+func TransferItem(c *gin.Context)<span class="cov0" title="0">{
+
+        var req model.TransferNFTRequest
+
+        if err := c.ShouldBindJSON(&amp;req); err != nil</span><span class="cov0" title="0">{
+                c.JSON(http.StatusBadRequest, gin.H{"error":"Invalid JSON"})
+                return
+        }</span>
+
+        <span class="cov0" title="0">time.Sleep(time.Second)
+        c.JSON(http.StatusOK, gin.H{
+                "status":"Transferred",
+                "item":req.Name,
+                "to": req.Address,
+        })</span>
+}
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package router
+
+import (
+        "time"
+
+        "github.com/gin-contrib/cors"
+        "github.com/gin-gonic/gin"
+        "github.com/nikhiln-code/koalaWorld/backend-go/internal/config"
+        "github.com/nikhiln-code/koalaWorld/backend-go/internal/handler"
+        "github.com/nikhiln-code/koalaWorld/backend-go/internal/service"
+)
+
+/*
+** Setup the Gin router
+** It sets up the routes and handlers for the application
+** It also have the CORS configuration
+**/
+
+
+func SetupRouter() *gin.Engine<span class="cov0" title="0">{
+        r:= gin.Default()
+        
+        //Load the configuration to get the Cors Allowed origins
+        conf, _ := config.LoadConfig()
+
+        //Check if the Cors Allowed origins are set in the configuration file
+        if conf.Cors.AllowedOrigins == nil || len(conf.Cors.AllowedOrigins) == 0</span><span class="cov0" title="0">{
+                panic("CORS Allowed Origins are not set in the configuration")</span>
+        }
+
+        // CORS configuration
+    <span class="cov0" title="0">r.Use(cors.New(cors.Config{
+        AllowOrigins:     conf.Cors.AllowedOrigins,
+        AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+        AllowHeaders:     []string{"Origin", "Content-Type"},
+        ExposeHeaders:    []string{"Content-Length"},
+        AllowCredentials: true,
+        MaxAge: 12 * time.Hour,
+    }))
+
+        nftHander := handler.NewNFTHandler(conf.Pinata.JwtKEY, service.NewNFTService())
+
+        api := r.Group("/api/v1")
+        </span><span class="cov0" title="0">{
+                api.GET("/fetch", nftHander.GetNFT)
+                api.POST("/transfer", handler.TransferItem)
+                api.POST("/mint", nftHander.MintNFT)
+        }</span>
+
+        <span class="cov0" title="0">return r</span>
+}</pre>
+		
+		<pre class="file" id="file7" style="display: none">package service
+
+import (
+        "bytes"
+        "encoding/json"
+        "fmt"
+        "mime/multipart"
+        "net/http"
+
+        "github.com/go-resty/resty/v2"
+)
+
+type NFTService struct{        
+}
+
+func NewNFTService() *NFTService<span class="cov0" title="0">{
+        return &amp;NFTService{}
+}</span>
+
+type NFTMetadata struct {
+        Name string `json:"name"`
+        Description string `json:"description"`
+        Image string `json:"image"` 
+        Environment string `json:"environment"`
+        Rarity string `json:"rarity"`
+}
+
+type NFTServiceInterface interface{
+        GetNFTs(jwt string) (string, error)
+        GetNFT(jwt, cid string) (string, error)
+        UploadToPinata(jwt string, metadata NFTMetadata, imageData []byte) (string, error)
+}
+
+func (s *NFTService) UploadToPinata(jwt string, metadata NFTMetadata, imageData []byte) (string, error) <span class="cov0" title="0">{
+        client := resty.New()
+
+        //1. Upload the image 
+        var buf bytes.Buffer
+        writer := multipart.NewWriter(&amp;buf)
+
+        // Create form file for the image
+        part, _ := writer.CreateFormFile("file", metadata.Image)
+        part.Write(imageData)
+        writer.WriteField("network", "public")
+        
+
+        keyvalues := map[string]string{
+                "name":        metadata.Name,
+                "description": metadata.Description,
+                "env":         metadata.Environment,
+                "rarity":      metadata.Rarity,
+                "image":       metadata.Image,
+        }
+
+        keyvalueJSON, err := json.Marshal(keyvalues)
+        outer := map[string]interface{}{
+                "keyvalues": string(keyvalueJSON), 
+        }
+        outerJSON, err := json.Marshal(outer)
+
+        // Write keyvalues field
+        writer.WriteField("keyvalues", string(outerJSON))
+        // Close the multipart writer
+        writer.Close()
+        
+        // Send the request to Pinata
+        imageResp, err := client.R().
+                SetHeader("Authorization", jwt).
+                SetHeader("Content-Type", writer.FormDataContentType()).
+                SetBody(&amp;buf).
+                Post("https://uploads.pinata.cloud/v3/files")
+
+        // Check for errors or bad status codes
+        if err != nil || imageResp.StatusCode() != http.StatusOK </span><span class="cov0" title="0">{
+                return "", fmt.Errorf("error uploading image to Pinata: %w", err)
+        }</span>
+
+        // Unmarshal the response
+        <span class="cov0" title="0">var imagerResult map[string]interface{}
+        json.Unmarshal(imageResp.Body(), &amp;imagerResult)
+        // Safely extract the CID
+        data, _ := imagerResult["data"].(map[string]interface{})
+        imageCid, _ := data["cid"].(string)
+
+        // Construct the image URL
+        imageUrl := "ipfs://" + imageCid
+        return imageUrl, nil</span>
+}
+
+func (s *NFTService) GetNFT(jwt ,cid string) (string, error) <span class="cov0" title="0">{
+        client := resty.New()
+
+        resp, err := client.R().
+        SetHeader("Authorization", jwt).
+        SetHeader("Content-Type", "application/json").
+        Get("https://api.pinata.cloud/v3/files/public?cid=" + cid)
+
+        // Check for errors or bad status codes
+        if err != nil || resp.StatusCode() != http.StatusOK </span><span class="cov0" title="0">{
+                return "", fmt.Errorf("error fetching NFT from Pinata: %w", err)
+        }</span>
+
+        // Unmarshal the response
+        <span class="cov0" title="0">json.Unmarshal(resp.Body(), &amp;resp)
+        return string(resp.Body()), nil</span>
+}
+
+func (s *NFTService) GetNFTs(jwt string) (string, error) <span class="cov0" title="0">{
+        client := resty.New()
+
+        resp, err := client.R().
+        SetHeader("Authorization", jwt).
+        SetHeader("Content-Type", "application/json").
+        Get("https://api.pinata.cloud/v3/files/public")
+
+        // Check for errors or bad status codes
+        if err != nil || resp.StatusCode() != http.StatusOK </span><span class="cov0" title="0">{
+                return "", fmt.Errorf("error fetching NFTs from Pinata: %w", err)
+        }</span>
+
+        // Unmarshal the response
+        <span class="cov0" title="0">json.Unmarshal(resp.Body(), &amp;resp)
+        return string(resp.Body()), nil</span>
+}</pre>
+		
+		<pre class="file" id="file8" style="display: none">package utils
+
+import (
+        "github.com/nikhiln-code/koalaWorld/backend-go/internal/service"
+        "github.com/stretchr/testify/mock"
+)        
+type MockNFTService struct {
+        mock.Mock
+}
+
+func (m *MockNFTService) GetNFTs(jwt string) (string, error) <span class="cov8" title="1">{
+        args := m.Called(jwt)
+        return args.String(0), args.Error(1)
+}</span>
+
+func (m *MockNFTService) GetNFT(jwt, cid string) (string, error) <span class="cov8" title="1">{
+        args := m.Called(jwt, cid)
+        return args.String(0), args.Error(1)
+}</span>
+
+func (m *MockNFTService) UploadToPinata(jwt string, metadata service.NFTMetadata, imageData []byte) (string, error) <span class="cov8" title="1">{
+        args := m.Called(jwt, metadata, imageData)
+        return args.String(0), args.Error(1)
+}</pre>
+		
+		<pre class="file" id="file9" style="display: none">package utils
+
+import "encoding/json"
+
+func GetMintPayload() []byte <span class="cov0" title="0">{
+    payload := map[string]string{
+        "name":    "Test Sword",
+        "address": "0xABC123",
+    }
+    jsonBytes, _ := json.Marshal(payload)
+    return jsonBytes
+}</span>
+
+func GetTransferPayload() []byte <span class="cov0" title="0">{
+    payload := map[string]string{
+        "name":    "Test Shield",
+        "address": "0xDEF456",
+    }
+    jsonBytes, _ := json.Marshal(payload)
+    return jsonBytes
+}</span>
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package utils
+
+import (
+        "github.com/gin-gonic/gin"
+        "github.com/nikhiln-code/koalaWorld/backend-go/internal/handler"
+)
+
+func SetupTestRouter() *gin.Engine <span class="cov0" title="0">{
+    r := gin.Default()
+    api := r.Group("/api")
+    </span><span class="cov0" title="0">{
+        api.GET("/fetch", handler.GetInventory)
+      //  api.POST("/mint", handler.MintItem)
+        api.POST("/transfer", handler.TransferItem)
+    }</span>
+    <span class="cov0" title="0">return r</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

@@ -1,6 +1,9 @@
 package model
 
-type Item struct {
+/**
+** NFT model
+ */
+type NFT struct {
 	ID string `json:"id"`
 	Name string `json:"name"`
 	Rarity string `json:"rarity"`
@@ -8,13 +11,18 @@ type Item struct {
 	Owner string`json:"owner"`
 }
 
-type MintItemRequest struct {
+/**
+** Mint NFT request model
+*/
+type MintNFTRequest struct {
 	Name string `json:"name"`
 	Address string `json:"address"`
 }
 
-
-type TransferItemRequest struct {
+/**
+** Transfer NFT request model
+*/
+type TransferNFTRequest struct {
 		Name string `json:"name"`
 		Address string `json:"address"`
-	}
+}
