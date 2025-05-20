@@ -7,8 +7,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/nikhiln-code/koalaWorld/backend-go/internal/model"
 )
-	
-func TransferItem(c *gin.Context){
+
+/*
+** This Handler is responsible for transfer the ownership of NFT from the old owner to the
+** New Owner
+** Internally it is expected to provide a valid wallet address
+ */	
+func TransferNFT(c *gin.Context){
 
 	var req model.TransferNFTRequest
 

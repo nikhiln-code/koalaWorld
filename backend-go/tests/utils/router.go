@@ -11,7 +11,7 @@ func SetupTestRouter() *gin.Engine {
     {
         api.GET("/fetch", handler.GetInventory)
       //  api.POST("/mint", handler.MintItem)
-        api.POST("/transfer", handler.TransferItem)
+        api.POST("/transfer", handler.TransferNFT)
     }
     return r
 }

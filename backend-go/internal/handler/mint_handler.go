@@ -9,15 +9,13 @@ import (
 	"github.com/nikhiln-code/koalaWorld/backend-go/internal/service"
 )
 
-
-
 /*
 ** MintNFT handles the minting of NFTs
 ** It takes the name, description, rarity, filename, enviornment from the request
 ** It also takes the image file from the request
 ** It returns the NFT metadata and the IPFS hash of the image
 ** It returns an error if any of the required fields are missing
-*/
+ */
 func (h *NFTHandler) MintNFT(c *gin.Context){
 	//Get the form values
 	name := c.PostForm("name")
@@ -67,5 +65,4 @@ func (h *NFTHandler) MintNFT(c *gin.Context){
 		"ipfs_metadata_url": metadataURL,
 		"message": "NFT minted successfully",
 	})
-
 }

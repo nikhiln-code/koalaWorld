@@ -43,7 +43,7 @@ func SetupRouter() *gin.Engine{
 	api := r.Group("/api/v1")
 	{
 		api.GET("/fetch", nftHander.GetNFT)
-		api.POST("/transfer", handler.TransferItem)
+		api.POST("/transfer", handler.TransferNFT)
 		api.POST("/mint", nftHander.MintNFT)
 	}
 

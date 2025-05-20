@@ -9,7 +9,7 @@
       "type": "go",
       "request": "launch",
       "mode": "auto",
-      "program": "${workspaceFolder}/go-backend/cmd/server",
+      "program": "${workspaceFolder}/backend-go/cmd/server",
       "env": {},
       "args": ["--config", "../../config/config.dev.yaml"],
       "buildFlags": "",
