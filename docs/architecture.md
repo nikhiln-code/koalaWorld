@@ -1,6 +1,6 @@
 # 🐨 Koala World - High level Architecture
 
-![Architecture](https://github.com/nikhiln-code/koalaWorld/main/docs/resource/architecture-v1.png)
+![Architecture](resources/architecture-v1.png)
 
 This is just the high level architecture of the project.
 
