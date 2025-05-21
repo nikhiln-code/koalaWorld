@@ -1,0 +1,23 @@
+services:
+  backend:
+    build:
+      context: ./backend-go
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - GO_ENV=development
+
+  # frontend:
+  #   build:
+  #     context: ./frontend-react
+  #     dockerfile: Dockerfile
+  #   working_dir: /app
+  #   command: npm run dev
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ./frontend-react:/app
+  #     - /app/node_modules
+  #   environment:
+  #     - NODE_ENV=development

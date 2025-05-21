@@ -1,7 +1,12 @@
 ## Backend Go
 
-This is the backend project for the Koala world project.
-It hostst the services which are used by the frontend.
+This is the backend project for the Koala world Game.
+It hostst the services which are used by the Game UI.
+
+# Game Assets:
+
+1. NFTs -> Partially done
+2. Game tokens -> to be done.
 
 ## It have Rest API's for the following services:
 
@@ -21,4 +26,4 @@ It hostst the services which are used by the frontend.
 
 1. Clone the repository
 2. Run `docker-compose up --build`
-3. The project will be available at `http://localhost:8080`
+3. The APIs will be available at `http://localhost:8085`
