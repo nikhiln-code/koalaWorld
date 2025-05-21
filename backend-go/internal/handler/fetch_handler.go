@@ -8,14 +8,17 @@ import (
 	"github.com/nikhiln-code/koalaWorld/backend-go/internal/logger"
 )
 
-
+/*
+** This handler is responsible for fetching the NFTs from the Pinata in IPFS format
+*/
 func (h *NFTHandler) GetNFT(c *gin.Context) {
+	// Initialize logger
 	log := logger.SugarLog()
-	log.Info("Fetching NFTs")
+	
+	log.Info("GetNFT handler: Fetching NFTs")
 	
 	cid := c.Query("cid")
 	log.Debug("Fetching NFTs for cid: %s", cid)
-
 
 	var (
 		result string
@@ -23,7 +26,7 @@ func (h *NFTHandler) GetNFT(c *gin.Context) {
 	)
 
 	if cid == "" { // When cid is not given it will fetch all the avaible public nfts
-		log.Debug("Cid not provided : Fetching all NFTs")
+		log.Debug("cid not provided : Fetching all NFTs")
 		result, err = h.Service.GetNFTs(h.PinataJWT)
 		if err != nil {
 
@@ -34,9 +37,10 @@ func (h *NFTHandler) GetNFT(c *gin.Context) {
 			return
 		}
 	} else { // try to fetch the nft with the given cid
-
+		log.Debug("Fetching NFTs for cid: %s", cid)
 		// Validate CID format (basic check for now)
 		if len(cid) < 59 {
+			log.Debug("Invalid CID format length expected as 59 it has : %s", len(cid), "chars")
 			c.JSON(http.StatusBadRequest, gin.H{
 				"error":   "Invalid CID",
 				"details": "CID must be a valid IPFS hash (minimum 59 characters)",
@@ -47,6 +51,7 @@ func (h *NFTHandler) GetNFT(c *gin.Context) {
 
 		result, err = h.Service.GetNFT(h.PinataJWT, cid)
 		if err != nil {
+			log.Error("Error fetching NFT:", err)
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": "Error fetching NFT",
 				"details": err.Error(),
@@ -57,6 +62,7 @@ func (h *NFTHandler) GetNFT(c *gin.Context) {
 
 	var parsedData interface{}
 	if err := json.Unmarshal([]byte(result), &parsedData); err != nil {
+		log.Error("Failed to parse pinata response:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to parse pinata response",
 			"details": err.Error(),
@@ -64,6 +70,7 @@ func (h *NFTHandler) GetNFT(c *gin.Context) {
 		return
 	}
 
+	log.Debug("NFTs fetched successfully")
 	c.JSON(http.StatusOK, gin.H{
 		"data":   parsedData,
 		"message": "NFT(s) fetched successfully",

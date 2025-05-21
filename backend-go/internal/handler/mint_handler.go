@@ -6,7 +6,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/nikhiln-code/koalaWorld/backend-go/internal/service"
+	"github.com/nikhiln-code/koalaWorld/backend-go/internal/logger"
+	"github.com/nikhiln-code/koalaWorld/backend-go/internal/model/nft"
 )
 
 /*
@@ -17,6 +18,11 @@ import (
 ** It returns an error if any of the required fields are missing
  */
 func (h *NFTHandler) MintNFT(c *gin.Context){
+	// Initialize logger
+	log := logger.SugarLog()
+
+	log.Info("MintNFT handler: Minting NFT")
+
 	//Get the form values
 	name := c.PostForm("name")
 	description := c.PostForm("description")
@@ -26,6 +32,7 @@ func (h *NFTHandler) MintNFT(c *gin.Context){
 
 	//Check if any of the required fields are missing
 	if name == "" || description == "" || rarity == "" || fileName == "" {
+		log.Debug("Missing required fields")
 		c.JSON(http.StatusBadRequest, gin.H{"error":"Name, description, filename, rarity are required"})
 		return
 	}
@@ -33,6 +40,7 @@ func (h *NFTHandler) MintNFT(c *gin.Context){
 	//Get the image file from the request
 	file, _, err := c.Request.FormFile("image")
 	if err != nil{
+		log.Debug("Error getting image file")
 		c.JSON(http.StatusBadRequest, gin.H{"error":"Image is required"})
 		return
 	}
@@ -41,12 +49,13 @@ func (h *NFTHandler) MintNFT(c *gin.Context){
 	//Read the image file
 	imageData, err := io.ReadAll(file)
 	if err != nil{
+		log.Debug("Error reading image file")
 		c.JSON(http.StatusInternalServerError, gin.H{"error":"Error reading image"})
 		return
 	}
 
 	//Create the NFT metadata
-	fileMetadata := service.NFTMetadata{
+	fileMetadata := nft.NFTMetadata{
 		Name: name,
 		Description: description,
 		Image: fileName,
@@ -57,10 +66,11 @@ func (h *NFTHandler) MintNFT(c *gin.Context){
 	//Upload the image to Pinata
 	metadataURL, err := h.Service.UploadToPinata(h.PinataJWT, fileMetadata, imageData)
 	if err != nil{
+		log.Debug("Error uploading to Pinata")
 		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error uploading to Pinata: %v", err)})
 		return
 	}
-
+	log.Info("Minted successfully Metadata URL: ", metadataURL)
 	c.JSON(http.StatusOK, gin.H{
 		"ipfs_metadata_url": metadataURL,
 		"message": "NFT minted successfully",

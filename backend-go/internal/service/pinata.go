@@ -8,7 +8,7 @@ import (
 	"net/http"
 
 	"github.com/go-resty/resty/v2"
-	"github.com/nikhiln-code/koalaWorld/backend-go/internal/model"
+	"github.com/nikhiln-code/koalaWorld/backend-go/internal/model/nft"
 )
 
 const(
@@ -24,18 +24,12 @@ func NewNFTService() *NFTService{
 	return &NFTService{}
 }
 
-type NFTMetadata struct {
-	Name string `json:"name"`
-	Description string `json:"description"`
-	Image string `json:"image"` 
-	Environment string `json:"environment"`
-	Rarity string `json:"rarity"`
-}
+
 
 type NFTServiceInterface interface{
 	GetNFTs(jwt string) (string, error)
 	GetNFT(jwt, cid string) (string, error)
-	UploadToPinata(jwt string, metadata NFTMetadata, imageData []byte) (string, error)
+	UploadToPinata(jwt string, metadata nft.NFTMetadata, imageData []byte) (string, error)
 }
 
 /*
@@ -45,7 +39,7 @@ type NFTServiceInterface interface{
 ** We are using Resty for api calls 
 ** Once successful this method will return the CID which can be used to fetch the NFT details.
 */
-func (s *NFTService) UploadToPinata(jwt string, metadata NFTMetadata, imageData []byte) (string, error) {
+func (s *NFTService) UploadToPinata(jwt string, metadata nft.NFTMetadata, imageData []byte) (string, error) {
 	client := resty.New()
 
 	//1. Upload the image 
@@ -120,7 +114,7 @@ func (s *NFTService) GetNFT(jwt ,cid string) (string, error) {
 		return "", fmt.Errorf("error fetching NFT from Pinata: %w", err)
 	}
 
-	var response = model.PinataNFTResponse
+	var response = nft.PinataNFTResponse
 
 	if err := json.Unmarshal(resp.Body(), &response); err != nil {
 		return "", fmt.Errorf("failed to unmarshal response: %w", err)
@@ -147,7 +141,7 @@ func (s *NFTService) GetNFTs(jwt string) (string, error) {
 		return "", fmt.Errorf("error fetching NFTs from Pinata: %w", err)
 	}
 
-	var response = model.PinataNFTResponse
+	var response = nft.PinataNFTResponse
 	
 	if err := json.Unmarshal(resp.Body(), &response); err != nil {
 		return "", fmt.Errorf("failed to unmarshal response: %w", err)

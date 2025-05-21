@@ -1,19 +1,8 @@
-package model
-
-/**
-** NFT model
- */
-type NFT struct {
-	ID string `json:"id"`
-	Name string `json:"name"`
-	Rarity string `json:"rarity"`
-	Image string`json:"image"`
-	Owner string`json:"owner"`
-}
+package nft
 
 /**
 ** Mint NFT request model
-*/
+ */
 type MintNFTRequest struct {
 	Name string `json:"name"`
 	Address string `json:"address"`

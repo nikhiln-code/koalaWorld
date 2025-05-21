@@ -15,7 +15,6 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-
 func createMultipartRequest(fields map[string]string, fileField string, fileName string, 
 	fileContent []byte)(*http.Request, *bytes.Buffer){
 	body := &bytes.Buffer{}

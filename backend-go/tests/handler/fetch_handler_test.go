@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -11,8 +12,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-
-
+func TestMain(m *testing.M) {
+	utils.SetupTestLogger()
+	code := m.Run()
+	os.Exit(code)
+}
 
 func TestGetNFTs_NoCID_ReturnsAllNFTs(t *testing.T) {
 	gin.SetMode(gin.TestMode)
