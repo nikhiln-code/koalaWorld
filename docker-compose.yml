@@ -4,7 +4,7 @@ services:
       context: ./backend-go
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "8085:8085"
     environment:
       - GO_ENV=development
 
