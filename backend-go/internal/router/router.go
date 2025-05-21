@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/nikhiln-code/koalaWorld/backend-go/internal/config"
 	"github.com/nikhiln-code/koalaWorld/backend-go/internal/handler"
+	"github.com/nikhiln-code/koalaWorld/backend-go/internal/logger"
 	"github.com/nikhiln-code/koalaWorld/backend-go/internal/service"
 )
 
@@ -18,7 +19,11 @@ import (
 
 
 func SetupRouter() *gin.Engine{
-	r:= gin.Default()
+	r:= gin.New()
+
+	//Attach the logger middleware
+	r.Use(logger.GinLogger())
+	r.Use(logger.GinRecovery())
 	
 	//Load the configuration to get the Cors Allowed origins
 	conf, _ := config.LoadConfig()

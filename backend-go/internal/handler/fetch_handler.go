@@ -5,10 +5,17 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/nikhiln-code/koalaWorld/backend-go/internal/logger"
 )
 
+
 func (h *NFTHandler) GetNFT(c *gin.Context) {
+	log := logger.SugarLog()
+	log.Info("Fetching NFTs")
+	
 	cid := c.Query("cid")
+	log.Debug("Fetching NFTs for cid: %s", cid)
+
 
 	var (
 		result string
@@ -16,8 +23,10 @@ func (h *NFTHandler) GetNFT(c *gin.Context) {
 	)
 
 	if cid == "" { // When cid is not given it will fetch all the avaible public nfts
+		log.Debug("Cid not provided : Fetching all NFTs")
 		result, err = h.Service.GetNFTs(h.PinataJWT)
 		if err != nil {
+
 			c.JSON(http.StatusBadGateway, gin.H{
 				"error": "Unable to fetch NFTs",
 				"details":err.Error(),
