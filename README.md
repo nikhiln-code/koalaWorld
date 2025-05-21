@@ -13,6 +13,7 @@ Koala World is a Web3-powered game still in development phase where players can 
 > Full documentation is in the [`/docs`](./docs) folder.
 
 - [Project Overview](./docs/overview.md)
+- [Architecture](./docs/architecture.md)
 - [Tech Stack](./docs/tech-stack.md)
 - [Development Setup](./docs/setup.md)
 - [API Reference](./docs/api-reference.md)
@@ -33,3 +34,9 @@ Koala World is a Web3-powered game still in development phase where players can 
 ```bash
 docker-compose up --build
 ```
+
+## 👤 Author
+
+**Nikhil N** – Tech-Lead/Core Engineer based in Sydney 🇦🇺  
+[Portfolio](https://nikhiln.netlify.app) • [GitHub](https://github.com/nikhiln-code) • [LinkedIn](https://www.linkedin.com/in/nikhil-nandankar)  
+📧 nikhil_n@live.com

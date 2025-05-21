@@ -7,6 +7,8 @@ The following services are defined in [`docker-compose.yml`](../docker-compose.y
 docker-compose up --build
 # Start a single service
 docker-compose up --build backend
+# Stop all services
+docker-compose down
 ```
 
 ## After the starting of the service you can access the following services at the following ports:
